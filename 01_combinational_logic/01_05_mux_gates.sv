@@ -1,3 +1,5 @@
+`timescale 1ns / 1ns
+
 module mux_2_1_width_1
 (
   input  d0, d1,
@@ -56,6 +58,23 @@ module mux_4_1
   output [3:0] y
 );
 
+  
+  logic [3:0] sel0;
+  logic [3:0] sel1;
+  logic [3:0] sel2;
+  logic [3:0] sel3;
+  
+  always_comb begin
+
+    sel0 = (~ sel [0] & ~ sel [1]) ? '1 : '0;
+    sel1 = (  sel [0] & ~ sel [1]) ? '1 : '0;
+    sel2 = (~ sel [0] &   sel [1]) ? '1 : '0;
+    sel3 = (  sel [0] &   sel [1]) ? '1 : '0;
+  
+  end
+
+  assign y =  (d0 & sel0) | (d1 & sel1) | (d2 & sel2) | (d3 & sel3);
+  
   // TODO
 
   // Using code for mux_2_1_width_1, mux_2_1_width_2,

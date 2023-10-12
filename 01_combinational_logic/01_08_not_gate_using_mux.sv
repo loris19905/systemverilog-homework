@@ -1,3 +1,5 @@
+`timescale 1ns / 1ns
+
 module mux
 (
   input  d0, d1,
@@ -17,6 +19,13 @@ module not_gate_using_mux
     output o
 );
 
+  mux i_mux 
+  (
+    .d0 (1'b1),
+    .d1 (1'b0),
+    .sel(i   ),
+    .y  (o   )
+  );
   // TODO
 
   // Implement not gate using instance(s) of mux,

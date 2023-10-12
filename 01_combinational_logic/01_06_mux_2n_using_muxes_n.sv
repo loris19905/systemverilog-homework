@@ -1,3 +1,5 @@
+`timescale 1ns / 1ns
+
 module mux_2_1
 (
   input  [3:0] d0, d1,
@@ -17,6 +19,33 @@ module mux_4_1
   input  [1:0] sel,
   output [3:0] y
 );
+
+  logic [3:0] mux_high_res;
+  logic [3:0] mux_low_res;
+
+  mux_2_1 i_mux_2_1_high 
+  (
+    .d0  (d0          ),
+    .d1  (d1          ),
+    .sel (sel[0]      ),
+    .y   (mux_high_res)
+  );
+
+  mux_2_1 i_mux_2_1_low 
+  (
+    .d0  (d2          ),
+    .d1  (d3          ),
+    .sel (sel[0]      ),
+    .y   (mux_low_res )
+  );
+
+  mux_2_1 i_mux_2_1_middle 
+  (
+    .d0  (mux_high_res),
+    .d1  (mux_low_res ),
+    .sel (sel[1]      ),
+    .y   (y           )
+  );
 
   // TODO
 

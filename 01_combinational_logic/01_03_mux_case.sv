@@ -1,3 +1,5 @@
+`timescale 1ns / 1ns
+
 module mux_2_1
 (
   input        [3:0] d0, d1,
@@ -22,11 +24,15 @@ module mux_4_1
   output logic [3:0] y
 );
 
-  // TODO
-
-  // Using code for mux_2_1 as an example,
-  // write code for 4:1 mux using the "case" statement
-
+  always_comb begin
+    case(sel)
+      2'b00: y = d0;
+      2'b01: y = d1;
+      2'b10: y = d2;
+      2'b11: y = d3;
+      default: y = d0;
+    endcase
+  end
 
 endmodule
 

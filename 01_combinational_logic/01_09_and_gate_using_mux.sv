@@ -1,3 +1,5 @@
+`timescale 1ns / 1ns
+
 module mux
 (
   input  d0, d1,
@@ -18,6 +20,24 @@ module and_gate_using_mux
     output o
 );
 
+  logic low_mux_data;
+  
+  mux i_mux_low
+  (
+    .d0 (1'b0        ),
+    .d1 (1'b1        ),
+    .sel(a           ),
+    .y  (low_mux_data)
+  );
+
+  mux i_mux_middle
+  (
+    .d0 (1'b0         ),
+    .d1 (low_mux_data ),
+    .sel(b            ),
+    .y  (o            )
+  );
+  
   // TODO
 
   // Implement and gate using instance(s) of mux,

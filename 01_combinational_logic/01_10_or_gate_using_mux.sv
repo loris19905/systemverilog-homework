@@ -1,3 +1,5 @@
+`timescale 1ns / 1ns
+
 module mux
 (
   input  d0, d1,
@@ -17,6 +19,24 @@ module or_gate_using_mux
     input  b,
     output o
 );
+
+logic low_mux_data;
+
+mux i_mux_low
+  (
+    .d0 (1'b0        ),
+    .d1 (1'b1        ),
+    .sel(a           ),
+    .y  (low_mux_data)
+  );
+
+  mux i_mux_middle
+  (
+    .d0 (low_mux_data),
+    .d1 (1'b1        ),
+    .sel(b           ),
+    .y  (o           )
+  );
 
   // TODO
 
