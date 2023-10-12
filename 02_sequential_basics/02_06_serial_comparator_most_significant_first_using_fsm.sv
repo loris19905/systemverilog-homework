@@ -54,15 +54,77 @@ endmodule
 
 module serial_comparator_most_significant_first_using_fsm
 (
-  input  clk,
-  input  rst,
-  input  a,
-  input  b,
-  output a_less_b,
-  output a_eq_b,
-  output a_greater_b
+  input  logic clk,
+  input  logic rst,
+  input  logic a,
+  input  logic b,
+  output logic a_less_b,
+  output logic a_eq_b,
+  output logic a_greater_b
 );
 
+  typedef enum logic [1:0] {
+                            A_EQUAL_TO_B     = 2'b00,
+                            A_LESS_THAN_B    = 2'b01,
+                            A_GREATER_THAN_B = 2'b10
+  } fsm_state_t;
+
+  fsm_state_t state;
+  fsm_state_t next_state;
+
+  always_ff @(posedge clk) begin
+    if (rst) begin
+      state <= A_EQUAL_TO_B;
+    end else begin
+      state <= next_state;
+    end
+  end
+
+  always_comb begin
+    case (state)
+      A_EQUAL_TO_B: 
+        begin
+          if (a == b) begin
+            next_state = A_EQUAL_TO_B;
+          end else begin
+            if (a & (~b)) begin
+              next_state = A_GREATER_THAN_B;
+            end else begin
+              next_state = A_LESS_THAN_B;
+            end
+          end  
+        end
+      A_LESS_THAN_B:
+        begin
+          next_state = A_LESS_THAN_B;  
+        end
+      A_GREATER_THAN_B: 
+        begin
+          next_state = A_GREATER_THAN_B;
+        end
+      default: next_state = A_EQUAL_TO_B;
+    endcase
+  end
+
+  always_comb begin
+    if (next_state == A_EQUAL_TO_B) begin
+      a_eq_b      = 1'b1;
+      a_less_b    = 1'b0;
+      a_greater_b = 1'b0;  
+    end else if (next_state == A_LESS_THAN_B) begin
+      a_eq_b      = 1'b0;
+      a_less_b    = 1'b1;
+      a_greater_b = 1'b0;
+    end else if (next_state == A_GREATER_THAN_B) begin
+      a_eq_b      = 1'b0;
+      a_less_b    = 1'b0;
+      a_greater_b = 1'b1;
+    end else begin
+      a_eq_b      = 1'b0;
+      a_less_b    = 1'b0;
+      a_greater_b = 1'b0;
+    end
+  end 
   // Task:
   // Implement a serial comparator module similar to the previus exercise
   // but use the Finite State Machine to evaluate the result.

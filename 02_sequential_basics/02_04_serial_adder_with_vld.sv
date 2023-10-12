@@ -1,17 +1,41 @@
+`timescale 1ns / 1ns
 //----------------------------------------------------------------------------
 // Task
 //----------------------------------------------------------------------------
 
 module serial_adder_with_vld
 (
-  input  clk,
-  input  rst,
-  input  vld,
-  input  a,
-  input  b,
-  input  last,
-  output sum
+  input  logic clk,
+  input  logic rst,
+  input  logic vld,
+  input  logic a,
+  input  logic b,
+  input  logic last,
+  output logic sum
 );
+  
+  logic carry;
+  logic carry_d;
+
+  always_ff @(posedge clk) begin
+    if (rst) begin
+      carry <= 1'b0;
+    end else begin
+      if (last) begin
+        carry <= 1'b0;  
+      end else begin
+        carry <= (vld) ? carry_d : carry;
+      end
+    end
+  end
+
+  always_comb begin
+    if (vld) begin
+      {carry_d, sum} = a + b + carry;
+    end else begin
+      {carry_d, sum} = '0;
+    end
+  end
 
   // Task:
   // Implement a module that performs serial addition of two numbers.

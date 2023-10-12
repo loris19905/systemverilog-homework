@@ -1,3 +1,4 @@
+`timescale 1ns / 1ns
 //----------------------------------------------------------------------------
 // Example
 //----------------------------------------------------------------------------
@@ -26,12 +27,28 @@ endmodule
 
 module one_cycle_pulse_detector (input clk, rst, a, output detected);
 
+  logic [2:0] bit_pattern;
+  assign bit_pattern = 3'b010;
+
+  logic [1:0] keep_pattern;
+  logic cnt;
+
+  always_ff @(posedge clk) begin
+    if (rst) begin
+      keep_pattern <= '0;
+      cnt <= 1'b1;
+    end else begin
+      keep_pattern <= {a, keep_pattern[1]};
+      cnt          <= cnt + 1'b1;
+    end
+  end
+
+  assign detected = (bit_pattern == {a, keep_pattern});
   // Task:
   // Create an one cycle pulse (010) detector.
   //
   // Note:
   // See the testbench for the output format ($display task).
-
 
 endmodule
 
